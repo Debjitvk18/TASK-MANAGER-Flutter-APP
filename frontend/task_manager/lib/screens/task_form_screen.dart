@@ -171,6 +171,18 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
       return widget.task == null || t.id != widget.task!.id;
     }).toList();
 
+    // Sanitize dropdown values to prevent assertion errors
+    final availableTaskIds = [null, ...availableTasks.map((t) => t.id)];
+    if (!availableTaskIds.contains(_blockedBy)) {
+      _blockedBy = null;
+    }
+    if (!['To-Do', 'In Progress', 'Done'].contains(_status)) {
+      _status = 'To-Do';
+    }
+    if (![null, 'Daily', 'Weekly'].contains(_isRecurring)) {
+      _isRecurring = null;
+    }
+
     return WillPopScope(
       onWillPop: () async {
         // Double check not saving before pop directly
